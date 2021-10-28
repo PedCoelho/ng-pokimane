@@ -13,7 +13,7 @@ export class PokeService {
   constructor(private http: HttpClient) { }
 
   getPage(page: number) {
-    return this.http.get(API_URL + page)
+    return this.http.get<PokeApiListEntry[]>(API_URL + page)
     //maybe should be handled internally
   }
 

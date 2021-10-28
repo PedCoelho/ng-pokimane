@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PokemonDetail } from '../../models/pokemon-detail.interface';
 
 @Component({
   selector: 'po-kimane',
@@ -8,11 +9,11 @@ import { Component, Input, OnInit } from '@angular/core';
 
 export class PokimaneComponent implements OnInit {
 
-  @Input() pokimane: any
+  @Input() pokimane!: PokemonDetail
 
-  types!: string[]
+  types: string[] = []
 
   ngOnInit() {
-    this.types = this.pokimane.types?.map(({ type }: any) => type.name)
+    this.types = this.pokimane.types.map(({ type }) => type.name)
   }
 }
