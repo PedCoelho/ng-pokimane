@@ -1,9 +1,10 @@
+import { PokemonDetail } from './../models/pokemon-detail.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PokeApiListEntry } from '../models/pokeapilistentry.interface';
 
 
-let pokimane: any[] = []
+let pokimane: PokemonDetail[] = []
 let API_URL: string = 'https://pokeapi.co/api/v2/pokemon/?offset='
 
 @Injectable()
@@ -29,7 +30,7 @@ export class PokeService {
     return pokimane.slice()
   }
 
-  add(poki: any) {
+  add(poki: PokemonDetail) {
     pokimane.push(poki)
     return this.get()
   }
