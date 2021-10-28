@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { PoAccordionItemComponent } from '@po-ui/ng-components';
 
 @Component({
@@ -6,15 +6,11 @@ import { PoAccordionItemComponent } from '@po-ui/ng-components';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterContentInit {
-
-  ngOnInit(): void {
-  }
+export class HomeComponent implements AfterContentInit {
 
   @ViewChild('allPokimane', { static: true }) allPokimane!: PoAccordionItemComponent;
 
   ngAfterContentInit() {
-    // ou utilizar o método collapse()
     this.allPokimane.expand();
   }
 

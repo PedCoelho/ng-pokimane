@@ -10,8 +10,15 @@
         <div class="po-accordion-wrapper">
             <po-accordion>
                 <po-accordion-item #allPokimane p-label="All Pokimanes" class="acc-item_wrapper">
-                    <po-kegrid>
+                    <po-kegrid #pokegrid>
                     </po-kegrid>
+                    <div class="see-more">
+                        <!-- -------------------- This could be somewhere else --------------------- -->
+                        <!-- ------------------------- is specific to grid ------------------------- -->
+                        <po-button *ngIf="pokegrid.next_page" (p-click)="pokegrid.getNextPage()"
+                            p-label="{{'Ver mais pokimanes' | uppercase }}">
+                        </po-button>
+                    </div>
                 </po-accordion-item>
             </po-accordion>
         </div>
