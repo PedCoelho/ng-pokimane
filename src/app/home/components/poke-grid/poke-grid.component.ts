@@ -1,9 +1,8 @@
+import { PokemonDetail } from './../../models/pokemon-detail.interface';
 import { Component, OnInit } from '@angular/core';
-// import { Pokemon } f/rom '../../models/pokeapilistentry.interface';
-import { PokeService } from '../../service/poke-service.service'
-
-import { concatMap } from 'rxjs/operators';
 import { concat, from, of } from 'rxjs';
+
+import { PokeService } from '../../service/poke-service.service'
 
 @Component({
   selector: 'po-kegrid',
@@ -13,8 +12,8 @@ import { concat, from, of } from 'rxjs';
 
 export class PokeGridComponent implements OnInit {
 
-  poki: any[] = []
-  next_url: string = ''
+  public poki: PokemonDetail[] = []
+  private next_url: string = ''
 
   constructor(private pokeService: PokeService) { }
 
@@ -35,33 +34,20 @@ export class PokeGridComponent implements OnInit {
   // }
 
   /* -------------------------------------------------------------------------- */
-  /*                      option 2 : build observable array                     */
+  /*         option 2 : build observable array and request sequentially         */
   /* -------------------------------------------------------------------------- */
-  getResults(page: number) {
-    this.pokeService.getPage(page).subscribe((res: any) => {
-      // console.log(res)
-      let observables = res.results.map((pokimane: any) => {
+  private getResults(page: number) {
+    this.pokeService.getPage(page).subscribe((page_data) => {
+      console.log(page_data)
+      let observables = page_data.results.map((pokimane) => {
         return this.pokeService.getDetails(pokimane.url)
       })
 
-      concat(...observables).subscribe((poki: any) => {
-        this.poki = this.pokeService.add(poki)
+      concat(...observables).subscribe((pokimane_detail) => {
+        this.poki = this.pokeService.add(pokimane_detail)
       })
     })
   }
-
-  // getResults(page: number) {
-  //   this.pokeService.getPage(page).pipe(
-  //     concatMap((res: any) => {
-  //       return from(res.results)
-  //     })
-  //   ).subscribe((pokimane: any) => {
-  //     console.log(pokimane)
-  //     this.pokeService.getDetails(pokimane.url).subscribe((poki: any) => {
-  //       this.poki = this.pokeService.add(poki)
-  //     })
-  //   })
-  // }
 
   ngOnInit() {
     this.getResults(0)
