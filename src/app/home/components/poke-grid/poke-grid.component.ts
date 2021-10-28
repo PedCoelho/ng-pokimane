@@ -13,7 +13,7 @@ import { PokeService } from '../../service/poke-service.service'
 export class PokeGridComponent implements OnInit {
 
   public poki: PokemonDetail[] = []
-  private next_url: string = ''
+  public next_page?: number
 
   constructor(private pokeService: PokeService) { }
 
@@ -36,9 +36,19 @@ export class PokeGridComponent implements OnInit {
   /* -------------------------------------------------------------------------- */
   /*         option 2 : build observable array and request sequentially         */
   /* -------------------------------------------------------------------------- */
-  private getResults(page: number) {
+  public getResults(page: number) {
     this.pokeService.getPage(page).subscribe((page_data) => {
       console.log(page_data)
+
+      // let page = [...new URLSearchParams(page_data.next).values()][0]
+      //ESSA PORRA FUNCIONA NO BROWSER, MAS NÃO FUNCIONA AQUI PORQUE C****** ?
+
+      let reg = new RegExp(/\?offset=(.*?)&/)
+      let pageN: string | null = (page_data.next.match(reg) || [null, null])[1] //gambiarra anti-typescript
+
+      this.next_page = Number(pageN)
+      console.log(pageN, this.next_page)
+
       let observables = page_data.results.map((pokimane) => {
         return this.pokeService.getDetails(pokimane.url)
       })
@@ -47,6 +57,13 @@ export class PokeGridComponent implements OnInit {
         this.poki = this.pokeService.add(pokimane_detail)
       })
     })
+  }
+
+  public getNextPage() {
+    let next = this.next_page
+    if (next) {
+      this.getResults(next)
+    }
   }
 
   ngOnInit() {
