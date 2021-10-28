@@ -1,0 +1,151 @@
+:host ::ng-deep {
+  height: fit-content;
+
+  .po-widget {
+    background-size: contain;
+    background-repeat: no-repeat;
+    // background-position: right center;
+    background-position: center;
+    cursor: pointer;
+    will-change: contents;
+    transition: transform 0.2s ease-out;
+
+    &:hover {
+      transform: scale(102%);
+    }
+
+    &-header {
+      font-size: 1rem;
+      text-transform: uppercase;
+      background: radial-gradient(ellipse closest-side, white 40%, transparent 100%);
+      width: fit-content;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    &-body {
+      height: 100%;
+    }
+  }
+
+  .pokidata-wrapper {
+    display: flex;
+    flex-flow: row;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    .types-holder {
+      display: flex;
+      flex-flow: column;
+      width: max-content;
+    }
+
+    .tag {
+      color: white;
+      border-radius: 4px;
+      padding: 2px 6px;
+      box-shadow: 0px 2px 2px #0000001f;
+      text-align: center;
+
+      &:last-of-type {
+        margin-top: 0.4rem;
+      }
+
+      //   width: fit-content;
+      //   justify-self: flex-end;
+    }
+  }
+
+  --normal: rgb(168, 168, 120);
+  --fire: rgb(240, 128, 48);
+  --fighting: rgb(192, 48, 40);
+  --water: rgb(104, 144, 240);
+  --flying: rgb(168, 144, 240);
+  --grass: rgb(120, 200, 80);
+  --poison: rgb(160, 64, 160);
+  --electric: rgb(248, 208, 48);
+  --ground: rgb(224, 192, 104);
+  --psychic: rgb(248, 88, 136);
+  --rock: rgb(184, 160, 56);
+  --ice: rgb(152, 216, 216);
+  --bug: rgb(168, 184, 32);
+  --dragon: rgb(112, 56, 248);
+  --ghost: rgb(112, 88, 152);
+  --dark: rgb(112, 88, 72);
+  --steel: rgb(184, 184, 208);
+  --fairy: rgb(238, 153, 172);
+
+  .normal {
+    background-color: var(--normal),
+  }
+
+  .fire {
+    background-color: var(--fire),
+  }
+
+  .fighting {
+    background-color: var(--fighting),
+  }
+
+  .water {
+    background-color: var(--water),
+  }
+
+  .flying {
+    background-color: var(--flying),
+  }
+
+  .grass {
+    background-color: var(--grass),
+  }
+
+  .poison {
+    background-color: var(--poison),
+  }
+
+  .electric {
+    background-color: var(--electric),
+  }
+
+  .ground {
+    background-color: var(--ground),
+  }
+
+  .psychic {
+    background-color: var(--psychic),
+  }
+
+  .rock {
+    background-color: var(--rock),
+  }
+
+  .ice {
+    background-color: var(--ice),
+  }
+
+  .bug {
+    background-color: var(--bug),
+  }
+
+  .dragon {
+    background-color: var(--dragon),
+  }
+
+  .ghost {
+    background-color: var(--ghost),
+  }
+
+  .dark {
+    background-color: var(--dark),
+  }
+
+  .steel {
+    background-color: var(--steel),
+  }
+
+  .fairy {
+    background-color: var(--fairy),
+  }
+
+}
