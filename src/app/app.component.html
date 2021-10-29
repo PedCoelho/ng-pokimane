@@ -2,10 +2,7 @@
   <po-toolbar [p-title]="appName"></po-toolbar>
   <po-menu #poMenu [p-collapsed]="closeMenu" [p-menus]="menus"></po-menu>
 
-  <!-- <po-page-default [p-title]="appName">
-    <p> {{appName}} page </p>
-  </po-page-default> -->
-
-  <app-home></app-home>
+  <router-outlet></router-outlet>
+  <!-- <app-home></app-home> -->
 
 </div>
