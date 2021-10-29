@@ -44,7 +44,7 @@ export class PokeGridComponent implements OnInit {
       //ESSA PORRA FUNCIONA NO BROWSER, MAS NÃO FUNCIONA AQUI PORQUE C****** ?
 
       let reg = new RegExp(/\?offset=(.*?)&/)
-      let pageN: string | null = (page_data.next.match(reg) || [null, null])[1] //gambiarra anti-typescript
+      let pageN: string | null = (page_data.next?.match(reg) || [null, null])[1] //gambiarra anti-typescript
 
       this.next_page = Number(pageN)
       console.log(pageN, this.next_page)
