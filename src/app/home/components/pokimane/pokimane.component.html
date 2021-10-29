@@ -1,4 +1,4 @@
-<po-widget *ngIf="pokimane.id" p-title="{{pokimane.id}} - {{pokimane.name}}" [p-height]="200"
+<po-widget (click)="gotoDetail()" *ngIf="pokimane.id" p-title="{{pokimane.id}} - {{pokimane.name}}" [p-height]="200"
     [p-background]="pokimane.sprites.other.home.front_default || pokimane.sprites.front_default">
     <div class="pokidata-wrapper">
         <div class="types-holder">
