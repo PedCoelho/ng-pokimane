@@ -13,7 +13,7 @@ export class PokeService {
   constructor(private http: HttpClient) { }
 
   getPage(page: number) {
-    return this.http.get<PokeApiPageData>(API_URL + page)
+    return this.http.get<PokeApiPageData>(API_URL + page + '&limit=151')
   }
 
   getDetails(url: string) {
@@ -26,7 +26,8 @@ export class PokeService {
     //todo o que fazer aqui caso o http request falhe 
   }
 
-  get() {
+  get(): PokemonDetail[] //is return type important to declare?
+  {
     return this.pokimane.slice()
   }
 
