@@ -29,7 +29,7 @@ import { PoPageDynamicDetailComponent } from '@po-ui/ng-templates';
         path: 'detail', component: DetailComponent, children: [
           {
             path: ':id', //:id is dynamic here
-            component: PoPageDynamicDetailComponent,
+            component: DetailComponent,
             data: { id: ':id' }
           }
         ]
