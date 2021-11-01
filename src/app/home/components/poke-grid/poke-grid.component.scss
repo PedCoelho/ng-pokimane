@@ -1,5 +1,21 @@
-:host {
+:host .wrapper {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: .4rem 0.9rem;
+}
+
+.see-more {
+  width: 100%;
+  display: flex;
+  margin: 1rem 0;
+  justify-content: center;
+
+  button {
+    cursor: pointer;
+    color: red;
+    border: 1px solid red;
+    border-radius: 4px;
+    padding: 1rem;
+    background: lightgray;
+  }
 }

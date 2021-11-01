@@ -1,2 +1,8 @@
-<po-kimane *ngFor="let pokimane of poki" [pokimane]="pokimane">
-</po-kimane>
+<div class="wrapper">
+    <po-kimane *ngFor="let pokimane of poki" [pokimane]="pokimane">
+    </po-kimane>
+</div>
+<div class="see-more">
+    <po-button *ngIf="next_page" (p-click)="getNextPage()" p-label="{{'Ver mais pokimanes' | uppercase }}">
+    </po-button>
+</div>

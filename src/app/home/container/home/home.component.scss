@@ -3,20 +3,3 @@
   border-top: 1px solid red !important;
   background: white;
 }
-
-
-.see-more {
-  width: 100%;
-  display: flex;
-  margin: 1rem 0;
-  justify-content: center;
-
-  button {
-    cursor: pointer;
-    color: red;
-    border: 1px solid red;
-    border-radius: 4px;
-    padding: 1rem;
-    background: lightgray;
-  }
-}
