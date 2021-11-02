@@ -22,20 +22,11 @@ export class DetailComponent {
   };
 
   public readonly fields: Array<PoPageDynamicDetailField> = [
-    { property: 'status', tag: true, divider: 'Status' },
-    { property: 'id', label: 'User ID', key: true },
-    { property: 'name', divider: 'Personal data' },
-    { property: 'nickname' },
-    { property: 'email', label: 'E-mail' },
-    { property: 'birthdate', label: 'Birth date', type: 'date' },
-    { property: 'genre', gridLgColumns: 6 },
-    { property: 'nationality' },
-    { property: 'birthPlace', label: 'Place of birth' },
-    { property: 'graduation' },
-    { property: 'father', label: 'Father`s name', divider: 'Relationship' },
-    { property: 'mother', label: 'Mother`s name' },
-    { property: 'street', divider: 'Address' },
-    { property: 'city' },
-    { property: 'country' }
+    { property: 'id', label: 'ID', key: true },
+    { property: 'order', label: 'Ordem' },
+    { property: 'name', color: 'red', tag: true, key: true, divider: 'Poke Data' },
+    { property: 'weight', type: 'number', format: '1.2-5' },
+    { property: 'types', label: 'Types' },
   ];
+
 }
