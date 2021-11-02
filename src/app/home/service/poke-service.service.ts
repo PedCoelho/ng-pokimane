@@ -45,12 +45,18 @@ export class PokeService {
     return this.get()
   }
 
-  get(): Observable<PokeDetail[]> {
+  get(): PokeDetail[] {
     /* -------------------------------------------------------------------------- */
-    /*                                 asynchronous                               */
+    /*                                 synchronous                                */
     /* -------------------------------------------------------------------------- */
-    return new Observable((observer: Observer<PokeDetail[]>) => { observer.next(this.pokimane.slice()) })
+    return this.pokimane.slice()
   }
+  // get(): Observable<PokeDetail[]> {
+  //   /* -------------------------------------------------------------------------- */
+  //   /*                                 asynchronous                               */
+  //   /* -------------------------------------------------------------------------- */
+  //   return new Observable((observer: Observer<PokeDetail[]>) => { observer.next(this.pokimane.slice()) })
+  // }
 }
 
 
