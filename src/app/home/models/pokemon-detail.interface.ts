@@ -1,3 +1,6 @@
+/* -------------------------------------------------------------------------- */
+/*                       original api response structure                      */
+/* -------------------------------------------------------------------------- */
 export interface PokemonDetail {
     name: string,
     id: number,
@@ -16,4 +19,19 @@ interface PokemonSprites {
 
 interface PokemonType {
     type: { name: string }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          simplified datastructure                          */
+/* -------------------------------------------------------------------------- */
+export interface PokeDetail {
+    name: string,
+    id: number,
+    types: string[],
+    sprites: {
+        main: string,
+        other: string
+    }
+    //review propriedades opcionais precisam ser declaras?
+    //other properties might be introduced via ...rest spreading
 }
