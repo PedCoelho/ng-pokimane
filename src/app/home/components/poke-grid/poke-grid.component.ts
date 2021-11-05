@@ -1,9 +1,9 @@
+import { PokeApiPageData } from './../../models/pokeapilistentry.interface';
 import { Component, OnInit } from '@angular/core';
-// import { Pokemon } f/rom '../../models/pokeapilistentry.interface';
-import { PokeService } from '../../service/poke-service.service'
+import { concat } from 'rxjs';
 
-import { concatMap } from 'rxjs/operators';
-import { concat, from, of } from 'rxjs';
+import { PokeService } from '../../service/poke-service.service'
+import { PokeDetail } from '../../models/pokemon-detail.interface';
 
 @Component({
   selector: 'po-kegrid',
@@ -13,59 +13,53 @@ import { concat, from, of } from 'rxjs';
 
 export class PokeGridComponent implements OnInit {
 
-  poki: any[] = []
-  next_url: string = ''
+  public next_page?: number = this.pokeService.getNextPageN()
+  private pokis: PokeDetail[] = this.pokeService.get()
 
   constructor(private pokeService: PokeService) { }
 
-  /* -------------------------------------------------------------------------- */
-  /*                          option 1 : non sequential                         */
-  /* -------------------------------------------------------------------------- */
-  // getResults(page: number) {
-  //   this.pokeService.getPage(page).subscribe((res: any) => {
-
-  //     console.log(res)
-
-  //     res?.results.forEach((pokimane: any) => {
-  //       this.pokeService.getDetails(pokimane.url)?.subscribe((poki: any) => {
-  //         this.poki = this.pokeService.add(poki)
-  //       })
-  //     })
-  //   })
-  // }
+  ngOnInit() {
+    if (!this.pokis.length) this.getResults(0)
+  }
 
   /* -------------------------------------------------------------------------- */
-  /*                      option 2 : build observable array                     */
+  /*         option 2 : build observable array and request sequentially         */
   /* -------------------------------------------------------------------------- */
-  getResults(page: number) {
-    this.pokeService.getPage(page).subscribe((res: any) => {
-      // console.log(res)
-      let observables = res.results.map((pokimane: any) => {
+  private getResults(page: number): void {
+    this.pokeService.getPage(page).subscribe((page_data) => {
+
+      this.setNextPage(page_data)
+
+      let observables = page_data.results.map((pokimane) => {
         return this.pokeService.getDetails(pokimane.url)
       })
 
-      concat(...observables).subscribe((poki: any) => {
-        this.poki = this.pokeService.add(poki)
+      concat(...observables).subscribe((pokimane_detail) => {
+        this.pokeService.add(pokimane_detail)
       })
     })
   }
 
-  // getResults(page: number) {
-  //   this.pokeService.getPage(page).pipe(
-  //     concatMap((res: any) => {
-  //       return from(res.results)
-  //     })
-  //   ).subscribe((pokimane: any) => {
-  //     console.log(pokimane)
-  //     this.pokeService.getDetails(pokimane.url).subscribe((poki: any) => {
-  //       this.poki = this.pokeService.add(poki)
-  //     })
-  //   })
-  // }
+  private setNextPage(api_response: PokeApiPageData): void {
+    console.log(api_response)
+    // let page = [...new URLSearchParams(api_response.next).values()][0]
+    //ESSA PORRA FUNCIONA NO BROWSER, MAS NÃO FUNCIONA AQUI PORQUE C****** ?
 
-  ngOnInit() {
-    this.getResults(0)
+    let reg = new RegExp(/\?offset=(.*?)&/)
+    let pageN: string | undefined = (api_response.next?.match(reg) || [undefined, undefined])[1] //gambiarra anti-typescript
+
+    //review controle explicito, mudar para reativo / rxjs
+    this.next_page = this.pokeService.setNextPageN(Number(pageN))
+    console.log(this.next_page)
   }
+
+  public getNextPage(): void {
+    let next = this.next_page
+    if (next) {
+      this.getResults(next)
+    }
+  }
+
 
 }
 

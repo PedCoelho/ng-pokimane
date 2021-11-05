@@ -9,13 +9,15 @@ import { PokeGridComponent } from './components/poke-grid/poke-grid.component';
 import { PokimaneComponent } from './components/pokimane/pokimane.component'
 
 import { PokeService } from './service/poke-service.service';
+import { CountPipe } from './pipes/count.pipe';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     PokeGridComponent,
-    PokimaneComponent
+    PokimaneComponent,
+    CountPipe
   ],
   imports: [
     CommonModule,

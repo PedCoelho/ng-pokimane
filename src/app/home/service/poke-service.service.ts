@@ -1,37 +1,87 @@
+import { PokeApiPageData } from './../models/pokeapilistentry.interface';
+import { PokeDetail, PokeApiDetail } from './../models/pokemon-detail.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PokeApiListEntry } from '../models/pokeapilistentry.interface';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-
-let pokimane: any[] = []
 let API_URL: string = 'https://pokeapi.co/api/v2/pokemon/?offset='
 
 @Injectable()
-
 export class PokeService {
+
+  private pokimane: PokeDetail[] = []
+
+  private next_page?: number
+  private nextPageUrl: string = ''
 
   constructor(private http: HttpClient) { }
 
-  getPage(page: number) {
-    return this.http.get(API_URL + page)
-    //maybe should be handled internally
+  getPage(page: number): Observable<PokeApiPageData> {
+    return this.http.get<PokeApiPageData>(API_URL + page + '&limit=151').pipe(
+      tap(response => this.getNextPageUrl(response))
+    )
   }
 
   getDetails(url: string) {
+    //review como fazer para inserir uma condição aqui? 
+    //review o componente consumidor espera um Observable, como fazer ele ficar de boa com um retorno vazio ou nenhum retorno 
     // if (url) {
-    //todo como fazer para inserir uma condição aqui? 
-    //todo o que fazer aqui caso o http request falhe 
-    return this.http.get(url)
+    //review tentativa de simplificar a resposta da API para que os componentes tenham menos trabalho
+
+    return this.http.get<PokeApiDetail>(url).pipe(
+      map(({ name, id, types, sprites, ...rest }) => {
+        const revised_types: string[] = types.map(x => x.type.name)
+        const revised_sprites: { main: string, other: string } = { main: sprites.other.home.front_default, other: sprites.front_default }
+
+        const poke_data: PokeDetail = { name, id, types: revised_types, sprites: revised_sprites, ...rest }
+
+        return poke_data
+      }))
+
+    /* --------------- o que fazer aqui caso o http request falhe --------------- */
+    /* ---------------- entender tratamento de erro em Observable --------------- */
     // }
+
   }
 
-  get() {
-    return pokimane.slice()
-  }
-
-  add(poki: any) {
-    pokimane.push(poki)
+  add(poki: PokeDetail) {
+    this.pokimane.push(poki)
     return this.get()
   }
+
+  get(): PokeDetail[] {
+    /* -------------------------------------------------------------------------- */
+    /*                                 synchronous                                */
+    /* -------------------------------------------------------------------------- */
+    return this.pokimane.slice()
+  }
+
+  // get(): Observable<PokeDetail[]> {
+  //   /* -------------------------------------------------------------------------- */
+  //   /*                                 asynchronous                               */
+  //   /* -------------------------------------------------------------------------- */
+  //   return of(this.pokimane.slice())
+  // }
+
+  private getNextPageUrl(response: PokeApiPageData) {
+    console.log(response.next)
+    if (!response.next) return
+    this.nextPageUrl = response.next
+  }
+
+  public getNextPageN(): number | undefined {
+    return this.next_page
+  }
+
+  public setNextPageN(pageN: number): number | undefined {
+    if (pageN) {
+      this.next_page = pageN
+      return this.next_page
+    }
+    return
+  }
 }
+
+
 

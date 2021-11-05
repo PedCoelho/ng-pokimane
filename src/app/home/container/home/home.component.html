@@ -1,16 +1,27 @@
 <!-- [p-actions]="actions" [p-breadcrumb]="breadcrumb" -->
 <po-page-default p-title="Pokimane Inspector">
     <div class="po-row">
-        <po-widget class="po-m-2 po-ml-0" p-title="Pokimanes Total">666</po-widget>
-        <po-widget class="po-m-2" p-title="Water Pokimanes">666</po-widget>
-        <po-widget class="po-m-2" p-title="Fire Pokimanes">666</po-widget>
-        <po-widget class="po-m-2" p-title="Leaf Pokimanes">666</po-widget>
+        <!-- fix grid -->
+        <div class="po-row grid-wrapper">
+            <po-widget class="total" p-title="Loaded Pokimanes Total">{{curr_pokimanes.length }}</po-widget>
+        </div>
+        <div class="po-row grid-wrapper">
+            <po-widget (click)="selectType(type.key)" [class]="{active:type.key == selectedType}"
+                *ngFor="let type of pokeTypes | keyvalue : compareEntries" class="po-m-1 po-mb-2"
+                p-title="{{type.key | titlecase}}">{{type.value.length}} ({{type.value.length /
+                curr_pokimanes.length |
+                percent}})
+            </po-widget>
+        </div>
+
     </div>
     <div class="po-row">
         <div class="po-accordion-wrapper">
             <po-accordion>
                 <po-accordion-item #allPokimane p-label="All Pokimanes" class="acc-item_wrapper">
                     <po-kegrid>
+                        <po-kimane *ngFor="let pokimane of curr_pokimanes" [pokimane]="pokimane">
+                        </po-kimane>
                     </po-kegrid>
                 </po-accordion-item>
             </po-accordion>

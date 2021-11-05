@@ -1,8 +1,8 @@
-<po-widget *ngIf="pokimane.id" p-title="{{pokimane.id}} - {{pokimane.name}}" [p-height]="200"
-    [p-background]="pokimane.sprites.other.home.front_default || pokimane.sprites.front_default">
+<po-widget (click)="gotoDetail()" *ngIf="pokimane.id" p-title="{{pokimane.id}} - {{pokimane.name}}" [p-height]="200"
+    [p-background]="pokimane.sprites.main || pokimane.sprites.other">
     <div class="pokidata-wrapper">
         <div class="types-holder">
-            <div class="tag" *ngFor="let type of types" [ngClass]="type">
+            <div class="tag" *ngFor="let type of pokimane.types" [ngClass]="type">
                 <span>{{type | titlecase}}</span>
             </div>
         </div>

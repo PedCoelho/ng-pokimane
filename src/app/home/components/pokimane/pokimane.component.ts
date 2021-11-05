@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { PokeDetail } from '../../models/pokemon-detail.interface';
 
 @Component({
   selector: 'po-kimane',
@@ -6,13 +8,20 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./pokimane.component.scss'],
 })
 
-export class PokimaneComponent implements OnInit {
+export class PokimaneComponent {
 
-  @Input() pokimane: any
+  @Input() pokimane: PokeDetail = {
+    id: 0,
+    name: 'default',
+    sprites: { other: '', main: '' },
+    types: []
+  }
 
-  types!: string[]
+  constructor(
+    private router: Router
+  ) { }
 
-  ngOnInit() {
-    this.types = this.pokimane.types?.map(({ type }: any) => type.name)
+  gotoDetail(): void {
+    this.router.navigate(['/detail', { id: this.pokimane.id }]);
   }
 }
