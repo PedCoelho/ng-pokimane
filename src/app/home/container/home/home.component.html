@@ -2,14 +2,15 @@
 <po-page-default p-title="Pokimane Inspector">
     <div class="po-row">
         <!-- fix grid -->
-        <!-- <div class="po-col"> -->
-        <po-widget class="po-m-1 po-mt-0" p-title="Loaded Pokimanes Total">{{curr_pokimanes.length }}</po-widget>
-        <!-- </div> -->
-        <div class="po-row">
-            <po-widget *ngFor="let type of pokeTypes | keyvalue : compareEntries" class="po-m-1 po-mb-2"
-                p-title="{{type.key | titlecase}}">{{type.value.length}} Poki - {{type.value.length /
+        <div class="po-row grid-wrapper">
+            <po-widget class="total" p-title="Loaded Pokimanes Total">{{curr_pokimanes.length }}</po-widget>
+        </div>
+        <div class="po-row grid-wrapper">
+            <po-widget (click)="selectType(type.key)" [class]="{active:type.key == selectedType}"
+                *ngFor="let type of pokeTypes | keyvalue : compareEntries" class="po-m-1 po-mb-2"
+                p-title="{{type.key | titlecase}}">{{type.value.length}} ({{type.value.length /
                 curr_pokimanes.length |
-                percent}}
+                percent}})
             </po-widget>
         </div>
 
