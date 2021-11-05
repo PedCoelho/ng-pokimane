@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { concat } from 'rxjs';
 
 import { PokeService } from '../../service/poke-service.service'
+import { PokeDetail } from '../../models/pokemon-detail.interface';
 
 @Component({
   selector: 'po-kegrid',
@@ -12,9 +13,14 @@ import { PokeService } from '../../service/poke-service.service'
 
 export class PokeGridComponent implements OnInit {
 
-  public next_page?: number
+  public next_page?: number = this.pokeService.getNextPageN()
+  private pokis: PokeDetail[] = this.pokeService.get()
 
   constructor(private pokeService: PokeService) { }
+
+  ngOnInit() {
+    if (!this.pokis.length) this.getResults(0)
+  }
 
   /* -------------------------------------------------------------------------- */
   /*         option 2 : build observable array and request sequentially         */
@@ -34,28 +40,26 @@ export class PokeGridComponent implements OnInit {
     })
   }
 
-  setNextPage(api_response: PokeApiPageData): void {
+  private setNextPage(api_response: PokeApiPageData): void {
     console.log(api_response)
     // let page = [...new URLSearchParams(api_response.next).values()][0]
     //ESSA PORRA FUNCIONA NO BROWSER, MAS NÃO FUNCIONA AQUI PORQUE C****** ?
 
     let reg = new RegExp(/\?offset=(.*?)&/)
-    let pageN: string | null = (api_response.next?.match(reg) || [null, null])[1] //gambiarra anti-typescript
+    let pageN: string | undefined = (api_response.next?.match(reg) || [undefined, undefined])[1] //gambiarra anti-typescript
 
-    this.next_page = Number(pageN)
+    //review controle explicito, mudar para reativo / rxjs
+    this.next_page = this.pokeService.setNextPageN(Number(pageN))
     console.log(this.next_page)
   }
 
-  getNextPage(): void {
+  public getNextPage(): void {
     let next = this.next_page
     if (next) {
       this.getResults(next)
     }
   }
 
-  ngOnInit() {
-    this.getResults(0)
-  }
 
 }
 
