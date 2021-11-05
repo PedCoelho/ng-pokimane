@@ -1,7 +1,7 @@
 /* -------------------------------------------------------------------------- */
 /*                       original api response structure                      */
 /* -------------------------------------------------------------------------- */
-export interface PokemonDetail {
+export interface PokeApiDetail {
     name: string,
     id: number,
     types: PokemonType[],
