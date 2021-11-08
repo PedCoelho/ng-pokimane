@@ -1,11 +1,13 @@
 import { PokeService } from './../../service/poke-service.service';
-import { AfterContentInit, Component, DoCheck, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, ViewChild } from '@angular/core';
 import { PoAccordionItemComponent } from '@po-ui/ng-components';
 import { PokeDetail } from '../../models/pokemon-detail.interface';
 import { KeyValue } from '@angular/common';
+import { map, mergeAll, take, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 /* -------------------------------------------------------------------------- */
-/*               custom type definition to hold pokemons by type              */
+/*              dynamic object definition to hold pokemons by type            */
 /* -------------------------------------------------------------------------- */
 interface PokeDetailsByType extends Record<string, PokeDetail[]> { }
 
@@ -14,49 +16,51 @@ interface PokeDetailsByType extends Record<string, PokeDetail[]> { }
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements AfterContentInit, DoCheck {
-
-  // public curr_pokimanes$ = service.get()
-  public curr_pokimanes: PokeDetail[] = []
+export class HomeComponent implements AfterContentInit {
   public pokeTypes: PokeDetailsByType = {}
-  public selectedType?: string
 
-  constructor(private service: PokeService) {
-    this.curr_pokimanes = service.get()
-  }
+  //vale a pena sempre declarar o tipo esperado, mesmo no caso de observables?
+  public selectedType$: BehaviorSubject<string> = new BehaviorSubject('')
 
-  @ViewChild('allPokimane', { static: true }) allPokimane!: PoAccordionItemComponent;
+  private curr_pokimanes$: Observable<PokeDetail[]> = this.pokeService.pokiSubject
+
+  private filtered_pokimanes$ = this.curr_pokimanes$.pipe(
+    withLatestFrom(this.selectedType$),
+    map(([pokemons, type]) => type.length ? pokemons.filter(poke => poke.types.includes(type)) : pokemons),
+    tap(pokemons => this.pokeTypes = this.updateTypes(pokemons)), //side effect
+  )
+
+  /* -------------------------------------------------------------------------- */
+  /*                    talvez não precise ser um observable                    */
+  /* -------------------------------------------------------------------------- */
+  private initial_pokimanes$ = of(this.pokeService.get()).pipe(
+    tap(pokemons => {
+      console.log(pokemons)
+      this.pokeTypes = this.updateTypes(pokemons)
+    })
+  )
+
+  private typeInputListener$ = this.selectedType$.pipe(
+    tap((type) => console.log('selected type changed:', type)),
+    withLatestFrom(this.curr_pokimanes$), //DEBUG a execução estáva morrendo aqui. Resolvido com ReplaySubject.
+    tap(([type, pokes]) => console.log('pokes:', pokes)),
+    map(([type, pokemons]) => type.length ? pokemons.filter(poke => poke.types.includes(type)) : pokemons),
+    tap((pokemons) => this.pokeTypes = this.updateTypes(pokemons)),
+  )
+
+
+  public combined_stream$ = of(this.initial_pokimanes$, this.filtered_pokimanes$, this.typeInputListener$).pipe(mergeAll())
+
+  constructor(private pokeService: PokeService) { }
+
+  @ViewChild('allPokimane') allPokimane!: PoAccordionItemComponent;
 
   ngAfterContentInit() {
-    this.pokeTypes = this.updateTypes()
-    this.allPokimane.expand();
-  }
+    console.log(this.selectedType$)
+    // const subs = this.combined_stream$.subscribe(x => console.log('Updated Pokemon array in service', x))
+    // const whatever = this.selectedType$.subscribe(x => console.log('Updated selected type', x))
 
-  ngDoCheck(): void {
-    /* -------------------------------------------------------------------------- */
-    /*                          lifecycle hook monitoring                         */
-    /* -------------------------------------------------------------------------- */
-    /* ------------------------- custom change detection ------------------------ */
-    if (this.curr_pokimanes.length != this.service.get().length) {
-
-      console.log('curr_len:' + this.curr_pokimanes.length, 'service_len:' + this.service.get().length)
-      this.curr_pokimanes = this.service.get()
-      this.pokeTypes = this.updateTypes()
-    }
-  }
-
-  private updateTypes(): PokeDetailsByType {
-    return this.curr_pokimanes.reduce((acc: PokeDetailsByType, obj: PokeDetail) => {
-      obj.types.forEach(type => {
-        acc[type] ? acc[type] = [...acc[type], obj] : acc[type] = [obj]
-      })
-      return acc
-
-    }, {})
-  }
-
-  public selectType(type: string) {
-    this.selectedType = type
+    setTimeout(() => this.allPokimane.expand(), 0);
   }
 
   /* -------------------------------------------------------------------------- */
@@ -66,5 +70,27 @@ export class HomeComponent implements AfterContentInit, DoCheck {
     return b.value.length - a.value.length
   }
 
+  selectType(type: string) {
+    if (this.selectedType$.value == type) {
+      console.log('is equal', console.log(this.selectedType$.value))
+      this.selectedType$.next('')
+      return
+    }
+    this.selectedType$.next(type)
+  }
 
+  private updateTypes(pokimanes: PokeDetail[]): PokeDetailsByType {
+
+    return pokimanes.reduce((acc: PokeDetailsByType, obj: PokeDetail) => {
+      obj.types.forEach(type => {
+        acc[type] ? acc[type] = [...acc[type], obj] : acc[type] = [obj]
+      })
+      return acc
+    }, {}) || {}
+
+  }
 }
+function startsWith(arg0: never[]): import("rxjs").OperatorFunction<PokeDetail[], unknown> {
+  throw new Error('Function not implemented.');
+}
+

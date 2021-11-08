@@ -14,11 +14,19 @@ import { PokeDetail } from '../../models/pokemon-detail.interface';
 export class PokeGridComponent implements OnInit {
 
   public next_page?: number = this.pokeService.getNextPageN()
-  private pokis: PokeDetail[] = this.pokeService.get()
+  private pokis: PokeDetail[] = []
 
   constructor(private pokeService: PokeService) { }
 
   ngOnInit() {
+    //review attempting to asynchronously read pokis from service
+    // this.pokeService.get().subscribe(pokis => {
+    //   console.log(pokis)
+    //   this.pokis = pokis
+    // })
+
+    this.pokis = this.pokeService.get()
+
     if (!this.pokis.length) this.getResults(0)
   }
 
@@ -26,6 +34,7 @@ export class PokeGridComponent implements OnInit {
   /*         option 2 : build observable array and request sequentially         */
   /* -------------------------------------------------------------------------- */
   private getResults(page: number): void {
+    console.log('getResults', page)
     this.pokeService.getPage(page).subscribe((page_data) => {
 
       this.setNextPage(page_data)
@@ -35,7 +44,9 @@ export class PokeGridComponent implements OnInit {
       })
 
       concat(...observables).subscribe((pokimane_detail) => {
-        this.pokeService.add(pokimane_detail)
+        //review subscribing sequentially but doesn`t need to update the service 
+        //review because it will do that by itself in the Observable
+        // this.pokeService.add(pokimane_detail)
       })
     })
   }
