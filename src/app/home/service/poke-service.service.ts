@@ -2,7 +2,7 @@ import { PokeApiPageData } from './../models/pokeapilistentry.interface';
 import { PokeDetail, PokeApiDetail } from './../models/pokemon-detail.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 let API_URL: string = 'https://pokeapi.co/api/v2/pokemon/?offset='
@@ -11,6 +11,8 @@ let API_URL: string = 'https://pokeapi.co/api/v2/pokemon/?offset='
 export class PokeService {
 
   private pokimane: PokeDetail[] = []
+  pokiSubject: Subject<PokeDetail[]> = new ReplaySubject<PokeDetail[]>()
+  // pokeObservable: Observable<PokeDetail[]> = new Observable()
 
   private next_page?: number
   private nextPageUrl: string = ''
@@ -37,7 +39,14 @@ export class PokeService {
         const poke_data: PokeDetail = { name, id, types: revised_types, sprites: revised_sprites, ...rest }
 
         return poke_data
-      }))
+      }),
+      tap((data) => {
+        this.add(data)
+        this.pokiSubject.next(this.pokimane.slice())
+      })
+    )
+
+
 
     /* --------------- o que fazer aqui caso o http request falhe --------------- */
     /* ---------------- entender tratamento de erro em Observable --------------- */
@@ -52,17 +61,10 @@ export class PokeService {
 
   get(): PokeDetail[] {
     /* -------------------------------------------------------------------------- */
-    /*                                 synchronous                                */
+    /*                                 synchronous                               */
     /* -------------------------------------------------------------------------- */
     return this.pokimane.slice()
   }
-
-  // get(): Observable<PokeDetail[]> {
-  //   /* -------------------------------------------------------------------------- */
-  //   /*                                 asynchronous                               */
-  //   /* -------------------------------------------------------------------------- */
-  //   return of(this.pokimane.slice())
-  // }
 
   private getNextPageUrl(response: PokeApiPageData) {
     console.log(response.next)
@@ -75,11 +77,11 @@ export class PokeService {
   }
 
   public setNextPageN(pageN: number): number | undefined {
-    if (pageN) {
-      this.next_page = pageN
-      return this.next_page
+    if (!pageN) {
+      return
     }
-    return
+    this.next_page = pageN
+    return this.next_page
   }
 }
 
