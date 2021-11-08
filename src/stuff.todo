@@ -1,0 +1,12 @@
+Responsive Design:
+    ☐ Make grid more responsive
+Details:
+    ☐ Figure out how to implement detail page correctly
+Filters:
+    ☐ Possibly combine type filters
+    ☐ Possible drill down Filter (sequential filtering)
+    ☐ Colorize tags based on filter names
+Global State Management:
+    ☐ Implement Ngrx
+Search:
+    ☐ Implement searchbar / search function
