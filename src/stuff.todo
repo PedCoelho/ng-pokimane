@@ -6,6 +6,8 @@ Filters:
     ☐ Possibly combine type filters
     ☐ Possible drill down Filter (sequential filtering)
     ☐ Colorize tags based on filter names
+Pagination:
+    ☐ Fix initial nextPage always showing up
 Global State Management:
     ☐ Implement Ngrx
 Search:
