@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration production && gh-pages -d dist",
+    "build": "ng build && gh-pages -d dist",
+    "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
   "private": true,
